@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.idea/
+.DS_Store
+# Trained models are rebuilt by `python main.py`; they're binary and change every run.
+models/*.joblib
