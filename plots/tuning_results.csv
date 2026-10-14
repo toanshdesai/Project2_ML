@@ -1,0 +1,17 @@
+params,std_test_score,cv_mae
+"{'learning_rate': 0.03, 'max_iter': 200, 'max_leaf_nodes': 31, 'min_samples_leaf': 60}",0.14388578558915624,4.230158286913024
+"{'learning_rate': 0.03, 'max_iter': 400, 'max_leaf_nodes': 15, 'min_samples_leaf': 60}",0.13914022107353077,4.237839267944747
+"{'learning_rate': 0.03, 'max_iter': 400, 'max_leaf_nodes': 15, 'min_samples_leaf': 20}",0.15288003362244515,4.246565620964473
+"{'learning_rate': 0.03, 'max_iter': 200, 'max_leaf_nodes': 15, 'min_samples_leaf': 60}",0.12683639569821756,4.247781071761022
+"{'learning_rate': 0.03, 'max_iter': 200, 'max_leaf_nodes': 31, 'min_samples_leaf': 20}",0.15154706325155337,4.24945895309649
+"{'learning_rate': 0.03, 'max_iter': 400, 'max_leaf_nodes': 31, 'min_samples_leaf': 60}",0.14833529053050448,4.253461677734333
+"{'learning_rate': 0.03, 'max_iter': 200, 'max_leaf_nodes': 15, 'min_samples_leaf': 20}",0.13326352556784196,4.260553811413969
+"{'learning_rate': 0.03, 'max_iter': 400, 'max_leaf_nodes': 31, 'min_samples_leaf': 20}",0.1717528136735912,4.267224586748185
+"{'learning_rate': 0.1, 'max_iter': 200, 'max_leaf_nodes': 15, 'min_samples_leaf': 60}",0.1567320678071945,4.280652633886854
+"{'learning_rate': 0.1, 'max_iter': 200, 'max_leaf_nodes': 15, 'min_samples_leaf': 20}",0.15789641533676654,4.2969387466072275
+"{'learning_rate': 0.1, 'max_iter': 200, 'max_leaf_nodes': 31, 'min_samples_leaf': 20}",0.1724848455231272,4.303373264714979
+"{'learning_rate': 0.1, 'max_iter': 200, 'max_leaf_nodes': 31, 'min_samples_leaf': 60}",0.1669572468309369,4.3272470121784865
+"{'learning_rate': 0.1, 'max_iter': 400, 'max_leaf_nodes': 15, 'min_samples_leaf': 60}",0.17500599367410405,4.334462941359026
+"{'learning_rate': 0.1, 'max_iter': 400, 'max_leaf_nodes': 31, 'min_samples_leaf': 20}",0.1725990048126895,4.3576502573592055
+"{'learning_rate': 0.1, 'max_iter': 400, 'max_leaf_nodes': 15, 'min_samples_leaf': 20}",0.16651837598222183,4.359466163741844
+"{'learning_rate': 0.1, 'max_iter': 400, 'max_leaf_nodes': 31, 'min_samples_leaf': 60}",0.1551699379987897,4.400346446071877

@@ -71,15 +71,51 @@ class Evaluator:
             y_lab = max(y, last + 0.05 * span)
             label_y[name], last = y_lab, y_lab
         for name, y in ends.items():
-            ax.annotate(f"{name}  {y:.1f}", (self.leads[-1], y), xytext=(self.leads[-1] + 0.2, label_y[name]),
+            ax.annotate(f"{name}  {y:.2f}", (self.leads[-1], y), xytext=(self.leads[-1] + 0.2, label_y[name]),
                         textcoords="data", va="center", color=INK_2, fontsize=9)
         ax.set_xticks(self.leads)
-        ax.set_xlim(0.7, self.leads[-1] + 1.6)
+        ax.set_xlim(0.7, self.leads[-1] + 1.8)
         ax.set_ylim(bottom=0)
         ax.set_xlabel("Days ahead")
         ax.set_ylabel("Mean absolute error (deg F)")
-        ax.set_title("Forecast error by lead day, Durham daily high (test years)", loc="left")
+        ax.set_title(f"Forecast error by lead day, Durham daily high ({self._test_years()})", loc="left")
         ax.legend(loc="upper left", ncol=2)
+        fig.tight_layout()
+        fig.savefig(path, dpi=150)
+        plt.close(fig)
+
+    def _test_years(self):
+        return f"test {self.Y_true.index[0].year}-{self.Y_true.index[-1].year}"
+
+    def plot_skill_by_lead(self, skill, path, models=("Gradient Boosting", "Ridge")):
+        """
+        Zoomed-in view of the same results: skill vs climatology, where the zero line IS climatology.
+        Above zero = the model beats the seasonal normal; at or below zero = no useful skill left.
+        """
+        fig, ax = plt.subplots(figsize=(9, 5.5))
+        ax.axhline(0, color=MUTED, lw=1.5, ls="--", zorder=1)
+        ax.annotate("Climatology = 0 (no skill)", (self.leads[0], 0), xytext=(self.leads[0] - 0.2, -0.012),
+                    textcoords="data", ha="left", va="top", color=INK_2, fontsize=9)
+
+        for name in models:
+            values = skill.loc[name]
+            ax.plot(self.leads, values, color=COLORS.get(name, INK), lw=2, marker="o", ms=8,
+                    markeredgecolor=SURFACE, markeredgewidth=2, label=name, zorder=3)
+        # Label every point of the best model so the decay is readable without the table.
+        best = models[0]
+        for lead, v in zip(self.leads, skill.loc[best]):
+            text = f"{v:+.2f}".replace("-0.00", "0.00").replace("+0.00", "0.00")
+            ax.annotate(text, (lead, v), xytext=(8, 8), textcoords="offset points",
+                        ha="left", va="bottom", color=INK_2, fontsize=9)
+
+        top = max(skill.loc[list(models)].to_numpy().max(), 0.05)
+        ax.set_ylim(-0.08, top + 0.08)
+        ax.set_xticks(self.leads)
+        ax.set_xlim(0.7, self.leads[-1] + 1.8)
+        ax.set_xlabel("Days ahead")
+        ax.set_ylabel("Skill = 1 - MAE / MAE of climatology")
+        ax.set_title(f"How long does the model beat the seasonal normal? ({self._test_years()})", loc="left")
+        ax.legend(loc="upper right")
         fig.tight_layout()
         fig.savefig(path, dpi=150)
         plt.close(fig)

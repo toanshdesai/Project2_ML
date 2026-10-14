@@ -84,6 +84,7 @@ def train_and_evaluate(refresh=False, tune=False):
 
     # ---- 6. Charts
     ev.plot_error_by_lead(mae, config.PLOT_DIR / "error_by_lead_day.png")
+    ev.plot_skill_by_lead(skill, config.PLOT_DIR / "skill_by_lead_day.png")
     ev.plot_forecast_vs_actual(predictions, "Gradient Boosting", config.PLOT_DIR / "forecast_vs_actual.png",
                                start=f"{X_test.index[0].year}-01-01", days=120)
     print("\nComputing feature importance (takes ~30s)...")
