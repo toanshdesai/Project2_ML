@@ -11,6 +11,9 @@ Two model families:
   GradientBoost HistGradientBoostingRegressor: hundreds of small decision trees, each one
                 correcting the last. Captures non-linear effects (e.g. a pressure drop matters
                 more in winter).
+
+AI use: this file was written with help from Claude (Anthropic's AI assistant).
+See the "AI use" section of README.md.
 """
 import joblib
 import numpy as np

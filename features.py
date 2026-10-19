@@ -8,6 +8,9 @@ Every row is a "forecast issue date" t.
 The rule that keeps this honest: features may look BACKWARD (shift(+k)),
 targets look FORWARD (shift(-h)). If a feature ever uses shift(-k), the model
 is peeking at the future, and the test score is fiction.
+
+AI use: this file was written with help from Claude (Anthropic's AI assistant).
+See the "AI use" section of README.md.
 """
 import numpy as np
 import pandas as pd

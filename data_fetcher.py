@@ -8,6 +8,9 @@ Two endpoints:
                 prediction); future days are the professional forecast we compare against.
 
 Data source: Open-Meteo.com, licensed CC BY 4.0.
+
+AI use: this file was written with help from Claude (Anthropic's AI assistant).
+See the "AI use" section of README.md.
 """
 import time
 from datetime import date, timedelta

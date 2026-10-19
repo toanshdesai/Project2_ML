@@ -2,6 +2,9 @@
 config.py - every setting the project uses, in one place.
 
 Change the location or the date split here and every other file picks it up.
+
+AI use: this file was written with help from Claude (Anthropic's AI assistant).
+See the "AI use" section of README.md.
 """
 from pathlib import Path
 

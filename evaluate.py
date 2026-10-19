@@ -7,6 +7,9 @@ Metrics
   RMSE  root mean squared error: punishes big misses harder. Reported alongside MAE.
   Skill 1 - MAE_model / MAE_climatology. 0 = no better than the calendar average,
         0.30 = 30% less error than climatology, negative = worse than just guessing normal.
+
+AI use: this file was written with help from Claude (Anthropic's AI assistant).
+See the "AI use" section of README.md.
 """
 import matplotlib
 matplotlib.use("Agg")    # render to files; no window needed

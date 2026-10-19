@@ -5,6 +5,10 @@ main.py - runs the whole pipeline.
   python main.py --tune      same, but grid-search the gradient boosting settings first
   python main.py --refresh   force a full re-download of the history
   python main.py --predict   live 7-day forecast for Durham vs the official forecast
+  python main.py --score     fill in actual highs for past live forecasts and score them
+
+AI use: this file was written with help from Claude (Anthropic's AI assistant).
+See the "AI use" section of README.md.
 """
 import argparse
 import json
@@ -135,14 +139,56 @@ def predict_live():
     print(f"\nLogged to {config.LIVE_LOG_CSV.relative_to(config.ROOT)}")
 
 
+def score_live():
+    """
+    Close the loop on --predict: look up what the high ACTUALLY was for every logged
+    forecast whose day has passed, fill in actual_high, and compare our model with the
+    official forecast and the seasonal normal on forecasts made in real time.
+    """
+    if not config.LIVE_LOG_CSV.exists():
+        print("No live forecasts logged yet - run `python main.py --predict` first.")
+        return
+
+    log = pd.read_csv(config.LIVE_LOG_CSV, parse_dates=["issued", "date"])
+    log = log.drop_duplicates(subset=["issued", "lead_day"], keep="last")   # --predict run twice in a day
+
+    # The live endpoint keeps up to 92 past days of observed weather.
+    actual = WeatherAPI().fetch_recent(past_days=92)["tmax"].round(1)
+    log["actual_high"] = log["date"].map(actual).fillna(log["actual_high"])
+    log.to_csv(config.LIVE_LOG_CSV, index=False, date_format="%Y-%m-%d")
+
+    done = log.dropna(subset=["actual_high"])
+    if done.empty:
+        print("None of the logged days have happened yet - check back tomorrow.")
+        return
+
+    errors = pd.DataFrame({
+        "Our model": (done["our_high"] - done["actual_high"]).abs(),
+        "Official": (done["official_high"] - done["actual_high"]).abs(),
+        "Normal": (done["normal_high"] - done["actual_high"]).abs(),
+        "lead_day": done["lead_day"],
+    })
+    table = errors.groupby("lead_day").mean().T
+    table["all"] = errors.drop(columns="lead_day").mean()
+
+    pd.set_option("display.float_format", "{:.1f}".format)
+    print(f"\nLive forecasts scored: {len(done)} of {len(log)} "
+          f"(issued {done['issued'].min():%b %d} -> {done['issued'].max():%b %d})")
+    print("\nMAE (deg F) on real-time forecasts by lead day:\n", table)
+    print(f"\nActual highs filled into {config.LIVE_LOG_CSV.relative_to(config.ROOT)}")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Durham 7-day high-temperature forecaster")
     parser.add_argument("--predict", action="store_true", help="make a live 7-day forecast")
     parser.add_argument("--tune", action="store_true", help="grid-search gradient boosting settings first")
     parser.add_argument("--refresh", action="store_true", help="re-download the full history")
+    parser.add_argument("--score", action="store_true", help="score logged live forecasts against what happened")
     args = parser.parse_args()
 
     if args.predict:
         predict_live()
+    elif args.score:
+        score_live()
     else:
         train_and_evaluate(refresh=args.refresh, tune=args.tune)
